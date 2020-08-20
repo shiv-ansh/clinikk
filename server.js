@@ -2,17 +2,39 @@ const express = require("express");
 
 const app = express();
 
+const multer = require("multer");
+
+const cors = require("cors");
+
 const port = 5000;
 
-app.get("/api/customers", (req, res) => {
+app.use(cors());
 
-    const customers = [
-        { id: 1, firstName: 'Shivansh', lastName: "Singh" },
-        { id: 2, firstName: 'Tejasva', lastName: "Gupta" },
-        { id: 3, firstName: 'Saurabh', lastName: "Yadav" }
-    ];
-    res.json(customers);
-})
+let storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "public");
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + "-" + file.originalname);
+    }
+});
+
+const upload = multer({ storage }).single("file");
+
+app.post("/upload", function (req, res) {
+
+    upload(req, res, function (err) {
+
+        if (err instanceof multer.MulterError) {
+            return res.status(500).json(err);
+        }
+        else if (err) {
+            return res.status(500).json(err)
+        }
+
+        return res.status(200).send(req.file);
+    });
+});
 
 
 //listening to server
