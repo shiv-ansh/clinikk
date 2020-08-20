@@ -28,3 +28,8 @@ npm run client
 
 # client on http://localhost:3000
 ```
+
+<br/>
+<br/>
+
+![Project Home page](./public/Frontend.jpeg)
